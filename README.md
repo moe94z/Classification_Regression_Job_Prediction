@@ -18,4 +18,5 @@ What is the education of the fellows that were placed, did the education impact 
 Duration until placement, how long does it take a fellow to be placed?
 
 
-![image](https://user-images.githubusercontent.com/58402096/159050077-64339157-5b4d-4a35-b71c-638b23af5e13.png)
+
+![data distribution](https://user-images.githubusercontent.com/58402096/159050511-c731fc28-d703-4dec-9cc8-0532b985e8bc.png)
