@@ -1,24 +1,3 @@
-### Classification_Regression_Job_Prediction
-
-#### HR Data Science Problem: Predict Employement based on the fellows creditionals.
-*** Predictive Modeling,EDA, Visualization, RandomizedSearch Hypertuning a. two models 1. Classification: IF a fellow will be placed or not. 2. Regression: WHEN a fellow will be placed
-
-Problem Statement
-The journey to employment is not an easy one. We spend our time learning and developing skills to eventually get a job. The research conducted in the following notebook will focus on predicting if a fellow will be placed and the time it will take for a fellow to be placed. Throughout the notebook, I will derive insights around fellows and create two models to effectively predict if and when a fellow will be placed.
-
-That being said, there are two models we are going to create in this case study:
-
-Classification model: Whether or not the fellow will be placed.
-Regression model: Predict the length that it will take a fellow to find placement.
-The other questions that I will tackle in the research:
-
-Overall placement, how many individuals in the program were placed?
-Pathrise Placement, did pathrise have an impact?
-What is the education of the fellows that were placed, did the education impact placement?
-Duration until placement, how long does it take a fellow to be placed?
-
-
-
 # Data Science Pipeline for Pathrise Placement Prediction
 
 ## Overview
@@ -47,6 +26,7 @@ This repository contains a Python script that implements a data processing and m
 - Scikit-learn
 - XGBoost
 - smtplib (for email notifications)
+- apache-airflow (optional)
 
 ## Installation
 
@@ -55,7 +35,48 @@ This repository contains a Python script that implements a data processing and m
    git clone https://github.com/moe94z/pathrise-placement-prediction.git
    cd pathrise-placement-prediction
 
+2. Install the required Python packages using requirements.txt:
+   ```bash
+    pip install -r requirements.txt
+
+## Execution
+Python3 Predict_Employment.py > errors.log & 
+
+Also can leverage Airflow to schedule job for production if necessary, creating a dag for the job is not complicated due to its low dependences 
+
+##Airflow Dag dummy script
+
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'pathrise_pipeline',
+    default_args=default_args,
+    description='A simple pipeline for Pathrise placement prediction',
+    schedule_interval=timedelta(days=1),
+)
+
+t1 = BashOperator(
+    task_id='run_pipeline',
+    bash_command='python3 local/environment/prod/Predict_Employment.py > local/environment/prod/errors.log',
+    dag=dag,
+)
+
+t1
+
+##Launch Airflow webserver after init db
+airflow webserver -p 8080
+airflow scheduler
 
 
-
-![data distribution](https://user-images.githubusercontent.com/58402096/159050511-c731fc28-d703-4dec-9cc8-0532b985e8bc.png)
